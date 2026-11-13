@@ -7,16 +7,12 @@ class OnboardingCopySection extends StatelessWidget {
   final String title;
   final String description;
 
-  const OnboardingCopySection({
-    super.key,
-    required this.title,
-    required this.description,
-  });
+  const OnboardingCopySection({super.key, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.w),
+      padding: EdgeInsets.only(left: 30.w, right: 30.w, top: 10.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

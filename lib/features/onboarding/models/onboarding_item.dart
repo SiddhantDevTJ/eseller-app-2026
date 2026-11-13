@@ -1,3 +1,5 @@
+import '../../../core/constants/app_assets.dart';
+
 enum OnboardingType {
   reachBuyers,
   turnOpportunities,
@@ -9,12 +11,14 @@ class OnboardingItem {
   final String title;
   final String description;
   final OnboardingType type;
+  final String image;
 
   const OnboardingItem({
     required this.id,
     required this.title,
     required this.description,
     required this.type,
+    required this.image,
   });
 
   static const List<OnboardingItem> items = [
@@ -24,6 +28,7 @@ class OnboardingItem {
       description:
           'Showcase your software on Techjockey and get discovered by thousands of buyers actively looking for solutions.',
       type: OnboardingType.reachBuyers,
+      image: AppAssets.onboardingImg1,
     ),
     OnboardingItem(
       id: 2,
@@ -31,6 +36,7 @@ class OnboardingItem {
       description:
           'Stay on top of new leads, calls and demo requests. Connect with potential buyers anytime, anywhere.',
       type: OnboardingType.turnOpportunities,
+      image: AppAssets.onboardingImg2,
     ),
     OnboardingItem(
       id: 3,
@@ -38,6 +44,7 @@ class OnboardingItem {
       description:
           'Discover key decision-makers, access buyer insights and reach the right people through email or LinkedIn.',
       type: OnboardingType.decisionMakers,
+      image: AppAssets.onboardingImg3,
     ),
   ];
 }

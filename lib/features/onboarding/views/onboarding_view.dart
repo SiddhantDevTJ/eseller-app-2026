@@ -22,10 +22,8 @@ class OnboardingView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 1. Top Bar with eSellerHUB Logo and Skip Button
-            OnboardingTopBar(
-              onSkip: controller.skip,
-            ),
+            // 1. Top Bar with eSellerHUB Logo and Skip Button (hidden on 3rd page)
+            Obx(() => OnboardingTopBar(showSkip: !controller.isLastPage, onSkip: controller.skip)),
 
             // 2. Showcase Area with Phone Mockups & Copy
             Expanded(
@@ -41,23 +39,17 @@ class OnboardingView extends StatelessWidget {
                       return SingleChildScrollView(
                         physics: const ClampingScrollPhysics(),
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
+                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
                           child: IntrinsicHeight(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(height: 8.h),
-                                // Phone Mockup with Overlay Card
-                                OnboardingPhoneMockup(type: item.type),
-                                SizedBox(height: 16.h),
+                                SizedBox(height: 80.h),
+                                // Middle Showcase Illustration
+                                OnboardingPhoneMockup(type: item.type, image: item.image),
+                                SizedBox(height: 20.h),
                                 // Title and Description Text
-                                OnboardingCopySection(
-                                  title: item.title,
-                                  description: item.description,
-                                ),
-                                SizedBox(height: 12.h),
+                                OnboardingCopySection(title: item.title, description: item.description),
                               ],
                             ),
                           ),
@@ -85,55 +77,42 @@ class OnboardingView extends StatelessWidget {
                     ),
                   ),
 
-                  // Next / Get Started Button on Right
+                  // Splash / Next Button on Right (Figma Node 4306:5888: 46x46 orange circle with chevron)
                   Positioned(
                     right: 0,
-                    child: Obx(
-                      () {
-                        final isLast = controller.isLastPage;
-                        return Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: controller.nextPage,
-                            borderRadius: BorderRadius.circular(AppDecorations.radiusFull),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 250),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: isLast ? 14.w : 10.w,
-                                vertical: 8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.brandOrange,
-                                borderRadius: BorderRadius.circular(AppDecorations.radiusFull),
-                                boxShadow: AppDecorations.brandButtonGlow,
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (isLast) ...[
-                                    Text(
-                                      'Get Started',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: AppTypography.fontFamily,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4.w),
+                    child: Obx(() {
+                      final isLast = controller.isLastPage;
+                      return AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: isLast ? 1.0 : 0.0,
+                        child: IgnorePointer(
+                          ignoring: !isLast,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: controller.nextPage,
+                              borderRadius: BorderRadius.circular(AppDecorations.radiusFull),
+                              child: Container(
+                                width: 46.w,
+                                height: 46.h,
+                                decoration: BoxDecoration(
+                                  color: AppColors.brandOrange,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(color: const Color(0x66FF6B00), blurRadius: 16.r, offset: Offset(0, 6.h)),
                                   ],
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.white,
-                                    size: 16.sp,
-                                  ),
-                                ],
+                                ),
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 2.w),
+                                  child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 18.sp),
+                                ),
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),
