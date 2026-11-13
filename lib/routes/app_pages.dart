@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../core/constants/app_colors.dart';
+import '../core/services/auth_service.dart';
+import '../core/services/secure_storage_service.dart';
+import '../features/onboarding/views/onboarding_view.dart';
 import 'app_routes.dart';
 import 'middlewares/auth_guard.dart';
 import 'middlewares/force_update_guard.dart';
@@ -17,6 +20,11 @@ class AppPages {
       middlewares: [
         ForceUpdateGuard(),
       ],
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppRoutes.onboarding,
+      page: () => const OnboardingView(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -57,8 +65,33 @@ class AppPages {
   ];
 }
 
-class _AppInitialPlaceholderView extends StatelessWidget {
+class _AppInitialPlaceholderView extends StatefulWidget {
   const _AppInitialPlaceholderView();
+
+  @override
+  State<_AppInitialPlaceholderView> createState() => _AppInitialPlaceholderViewState();
+}
+
+class _AppInitialPlaceholderViewState extends State<_AppInitialPlaceholderView> {
+  @override
+  void initState() {
+    super.initState();
+    _handleRouting();
+  }
+
+  Future<void> _handleRouting() async {
+    await Future.delayed(const Duration(milliseconds: 1200));
+    if (!mounted) return;
+
+    final isFirst = SecureStorageService.to.isFirstLaunch();
+    if (isFirst) {
+      Get.offAllNamed(AppRoutes.onboarding);
+    } else if (AuthService.to.isAuthenticated.value) {
+      Get.offAllNamed(AppRoutes.dashboard);
+    } else {
+      Get.offAllNamed(AppRoutes.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

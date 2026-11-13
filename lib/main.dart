@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'core/network/api_client.dart';
 import 'core/services/auth_service.dart';
@@ -41,23 +42,31 @@ class VendorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Tj Partner App',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
-      initialRoute: AppPages.initial,
-      getPages: AppPages.routes,
+    return ScreenUtilInit(
+      // Figma frame dimensions: 390 × 844
+      designSize: const Size(390, 844),
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
-        final mediaQuery = MediaQuery.of(context);
-        final clampedScale = mediaQuery.textScaler.clamp(
-          minScaleFactor: 0.85,
-          maxScaleFactor: 1.15,
-        );
-        return MediaQuery(
-          data: mediaQuery.copyWith(textScaler: clampedScale),
-          child: child ?? const SizedBox.shrink(),
+        return GetMaterialApp(
+          title: 'Tj Partner App',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.light,
+          initialRoute: AppPages.initial,
+          getPages: AppPages.routes,
+          builder: (context, widget) {
+            final mediaQuery = MediaQuery.of(context);
+            final clampedScale = mediaQuery.textScaler.clamp(
+              minScaleFactor: 0.85,
+              maxScaleFactor: 1.15,
+            );
+            return MediaQuery(
+              data: mediaQuery.copyWith(textScaler: clampedScale),
+              child: widget ?? const SizedBox.shrink(),
+            );
+          },
         );
       },
     );
